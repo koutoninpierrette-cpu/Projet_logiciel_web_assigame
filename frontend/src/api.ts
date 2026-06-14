@@ -135,6 +135,10 @@ export async function uploadFile(file: File): Promise<string> {
   return `${API_BASE}${data.url}`
 }
 
+export function fetchUtilisateurs(): Promise<ApiUtilisateur[]> {
+  return request('/api/utilisateur/list')
+}
+
 export function fetchUtilisateur(id: number): Promise<ApiUtilisateur> {
   return request(`/api/utilisateur/${id}`)
 }
@@ -158,4 +162,39 @@ export function login(payload: LoginPayload): Promise<ApiUtilisateur> {
     method: 'POST',
     body: JSON.stringify(payload),
   })
+}
+
+export function deleteUtilisateur(id: number): Promise<void> {
+  return request(`/api/utilisateur/delete/${id}`, { method: 'DELETE' })
+}
+
+export function deleteBoutique(id: number): Promise<void> {
+  return request(`/api/boutique/delete/${id}`, { method: 'DELETE' })
+}
+
+export function deleteProduit(id: number): Promise<void> {
+  return request(`/api/produit/delete/${id}`, { method: 'DELETE' })
+}
+
+export type CategoriePayload = {
+  nom_categorieproduit: string
+  description?: string
+}
+
+export function createCategorie(payload: CategoriePayload): Promise<ApiCategorie> {
+  return request('/api/categorieproduit/add', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+export function updateCategorie(id: number, payload: CategoriePayload): Promise<ApiCategorie> {
+  return request(`/api/categorieproduit/update/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  })
+}
+
+export function deleteCategorie(id: number): Promise<void> {
+  return request(`/api/categorieproduit/delete/${id}`, { method: 'DELETE' })
 }

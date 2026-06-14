@@ -5,6 +5,7 @@ import SearchOverlay from './SearchOverlay'
 import ShopsPage from './ShopsPage'
 import ShopPage from './ShopPage'
 import MyShopPage from './MyShopPage'
+import AdminPage from './AdminPage'
 import { Icon } from './icons'
 import { ProductCard } from './ProductCard'
 import type { Category, Product, Shop } from './types'
@@ -213,7 +214,7 @@ function App() {
     }
   })
   const [myShop, setMyShop] = useState<Shop | null>(null)
-  const [view, setView] = useState<'home' | 'shops' | 'shop' | 'my-shop'>('home')
+  const [view, setView] = useState<'home' | 'shops' | 'shop' | 'my-shop' | 'admin'>('home')
   const [selectedShopId, setSelectedShopId] = useState<string | null>(null)
 
   useEffect(() => {
@@ -452,6 +453,13 @@ function App() {
     closeMenu()
   }
 
+  function goToAdmin() {
+    setView('admin')
+    setSelectedShopId(null)
+    setAccountMenuOpen(false)
+    closeMenu()
+  }
+
   function handleShopCreated(boutique: ApiBoutique) {
     const shop = mapApiBoutique(boutique, 0)
     setMyShop(shop)
@@ -471,6 +479,7 @@ function App() {
     return <AuthPage onClose={() => setAuthOpen(false)} onAuthenticated={handleAuthenticated} />
   }
 
+  const isAdmin = currentUser?.statut === 'admin'
   const selectedShop = shopsWithCounts.find((shop) => shop.id === selectedShopId) ?? null
   const shopProducts = selectedShop ? products.filter((product) => product.shopId === selectedShop.id) : []
 
@@ -522,6 +531,11 @@ function App() {
                       <button type="button" className="account-link" onClick={goToMyShop}>
                         Ma boutique
                       </button>
+                      {isAdmin && (
+                        <button type="button" className="account-link" onClick={goToAdmin}>
+                          Administration
+                        </button>
+                      )}
                       <button type="button" className="account-logout" onClick={handleLogout}>
                         Se déconnecter
                       </button>
@@ -565,6 +579,8 @@ function App() {
             onToggleWishlist={toggleWishlist}
           />
         )}
+
+        {view === 'admin' && isAdmin && <AdminPage onBack={goHome} />}
 
         {view === 'my-shop' && currentUser && (
           <MyShopPage
