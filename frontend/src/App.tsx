@@ -341,24 +341,6 @@ function App() {
   const cartCount = cartItems.reduce((sum, line) => sum + line.quantity, 0)
   const cartTotal = cartItems.reduce((sum, line) => sum + line.product.price * line.quantity, 0)
 
-  const productGroups = useMemo(() => {
-    const groups: { key: string; shopName?: string; products: Product[] }[] = []
-    const indexByKey = new Map<string, number>()
-
-    for (const product of products) {
-      const key = product.shopId ?? `no-shop-${product.id}`
-      let index = indexByKey.get(key)
-      if (index === undefined) {
-        index = groups.length
-        indexByKey.set(key, index)
-        groups.push({ key, shopName: product.shopName, products: [] })
-      }
-      groups[index].products.push(product)
-    }
-
-    return groups
-  }, [products])
-
   const searchResults = useMemo(() => {
     const q = searchQuery.trim().toLowerCase()
     if (!q) return []
@@ -697,28 +679,18 @@ function App() {
               </a>
             </div>
 
-            {productGroups.map((group) => (
-              <div className="product-shop-group" key={group.key}>
-                {group.shopName && (
-                  <h3 className="product-shop-group-title">
-                    <Icon name="icon-store" />
-                    {group.shopName}
-                  </h3>
-                )}
-                <div className="product-grid">
-                  {group.products.map((product) => (
-                    <ProductCard
-                      key={product.id}
-                      product={product}
-                      inCart={cart[product.id] ?? 0}
-                      isFavorite={Boolean(wishlist[product.id])}
-                      onAddToCart={addToCart}
-                      onToggleWishlist={toggleWishlist}
-                    />
-                  ))}
-                </div>
-              </div>
-            ))}
+            <div className="product-grid">
+              {products.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  inCart={cart[product.id] ?? 0}
+                  isFavorite={Boolean(wishlist[product.id])}
+                  onAddToCart={addToCart}
+                  onToggleWishlist={toggleWishlist}
+                />
+              ))}
+            </div>
           </div>
         </section>
 
