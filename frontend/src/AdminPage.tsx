@@ -237,7 +237,7 @@ function AdminPage({ onBack }: { onBack: () => void }) {
                     <tr key={product.id_produit}>
                       <td>{product.id_produit}</td>
                       <td>{product.nom_produit}</td>
-                      <td>{product.prix.toFixed(2)} €</td>
+                      <td>{product.prix.toFixed(2)} FCFA</td>
                       <td>{product.categorieProduit?.nom_categorieproduit ?? '—'}</td>
                       <td>{product.boutique?.nom_boutique ?? '—'}</td>
                       <td>{product.statut}</td>

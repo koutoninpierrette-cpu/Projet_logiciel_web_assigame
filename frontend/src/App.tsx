@@ -158,13 +158,30 @@ const fallbackProducts: Product[] = [
     icon: 'icon-watch',
   },
 ]
-
+ 
 const trustPoints = [
-  { icon: 'icon-truck', title: 'Livraison rapide', text: 'Expédition en 24 à 48h partout en France et en Belgique.' },
-  { icon: 'icon-shield', title: 'Paiement sécurisé', text: 'Transactions chiffrées et protégées par nos partenaires bancaires.' },
-  { icon: 'icon-refresh', title: 'Retours sous 30 jours', text: 'Changement d’avis ou produit défectueux, repris gratuitement.' },
-  { icon: 'icon-headset', title: 'Support 7j/7', text: 'Une équipe dédiée pour répondre à toutes vos questions techniques.' },
+  {
+    icon: 'icon-store',
+    title: 'Boutiques vérifiées',
+    text: 'Achetez auprès de vendeurs vérifiés.'
+  },
+  {
+    icon: 'icon-monitor',
+    title: 'Large choix de produits',
+    text: 'Des centaines de produits proposés par différentes boutiques.'
+  },
+  {
+    icon: 'icon-star',
+    title: 'Avis et évaluations',
+    text: 'Consultez les notes et commentaires des acheteurs.'
+  },
+  {
+    icon: 'icon-shield',
+    title: 'Transactions sécurisées',
+    text: 'Protection des données et des échanges.'
+  },
 ]
+
 
 const fallbackShops: Shop[] = [
   {
@@ -473,7 +490,7 @@ function App() {
             <span className="brand-mark">
               <Icon name="icon-gamepad" />
             </span>
-            <span className="brand-name">Assigame</span>
+            <span className="brand-name">AssiNet</span>
           </a>
 
           <nav className={`main-nav${menuOpen ? ' open' : ''}`} aria-label="Navigation principale">
@@ -587,35 +604,39 @@ function App() {
             <div className="hero-content">
               <span className="eyebrow">Nouvelle collection 2026</span>
               <h1>
-                L&apos;équipement gaming et tech pensé pour la performance
+                Achetez et vendez vos produits en toute simplicité
               </h1>
               <p className="hero-text">
-                Une sélection rigoureuse de matériel gaming, audio et informatique,
-                testée par notre équipe, livrée rapidement et garantie deux ans.
+                Une plateforme qui permet aux vendeurs de créer leur boutique et aux acheteurs de trouver les meilleurs produits.
               </p>
               <div className="hero-actions">
-                <a className="btn btn-primary" href="#produits">
-                  Explorer le catalogue
-                  <Icon name="icon-arrow-right" />
-                </a>
-                <a className="btn btn-ghost" href="#promotions">
-                  Voir les promotions
-                </a>
-              </div>
-              <dl className="hero-stats">
-                <div>
-                  <dt>12 000+</dt>
-                  <dd>produits référencés</dd>
-                </div>
-                <div>
-                  <dt>98%</dt>
-                  <dd>clients satisfaits</dd>
-                </div>
-                <div>
-                  <dt>24-48h</dt>
-                  <dd>délai de livraison</dd>
-                </div>
-              </dl>
+  <a className="btn btn-primary" href="#produits">
+    Découvrir les produits
+    <Icon name="icon-arrow-right" />
+  </a>
+
+  <a className="btn btn-ghost" href="#categories">
+    Parcourir les catégories
+  </a>
+</div>
+
+<dl className="hero-stats">
+  <div>
+    <dt>Multi-catégories</dt>
+    <dd>des produits variés</dd>
+  </div>
+
+  <div>
+    <dt>Boutiques</dt>
+    <dd>vendeurs vérifiés</dd>
+  </div>
+
+  <div>
+    <dt>Sécurisé</dt>
+    <dd>achats en confiance</dd>
+  </div>
+</dl>
+
             </div>
 
             <div className="hero-visual" aria-hidden="true">
@@ -624,7 +645,7 @@ function App() {
                 <Icon name="icon-gamepad" className="hero-panel-icon" />
                 <div className="hero-card hero-card-price">
                   <span className="hero-card-label">Carte graphique RTX</span>
-                  <span className="hero-card-value">649 €</span>
+                  <span className="hero-card-value">500.000 FCFA</span>
                 </div>
                 <div className="hero-card hero-card-rating">
                   <Icon name="icon-star" className="star filled" />
@@ -647,7 +668,7 @@ function App() {
                 <h2>Parcourir par catégorie</h2>
               </div>
               <p className="section-text">
-                Six univers, sélectionnés et mis à jour chaque semaine selon les nouveautés du marché.
+               
               </p>
             </div>
 
@@ -707,44 +728,47 @@ function App() {
             ))}
           </div>
         </section>
-
         <section className="newsletter" id="promotions">
-          <div className="container newsletter-inner">
-            <div className="newsletter-text">
-              <h2>Ne manquez aucune promotion</h2>
-              <p>
-                Inscrivez-vous à notre newsletter pour recevoir les ventes flash, les nouveautés
-                et des codes de réduction exclusifs chaque semaine.
-              </p>
-            </div>
-            {newsletterSent ? (
-              <p className="newsletter-success">
-                <Icon name="icon-check" />
-                Merci, vous êtes inscrit avec l&apos;adresse {newsletterEmail} !
-              </p>
-            ) : (
-              <form className="newsletter-form" onSubmit={handleNewsletterSubmit}>
-                <label className="visually-hidden" htmlFor="newsletter-email">
-                  Adresse e-mail
-                </label>
-                <div className="input-group">
-                  <Icon name="icon-mail" />
-                  <input
-                    id="newsletter-email"
-                    type="email"
-                    placeholder="vous@exemple.com"
-                    value={newsletterEmail}
-                    onChange={(event) => setNewsletterEmail(event.target.value)}
-                    required
-                  />
-                </div>
-                <button className="btn btn-primary" type="submit">
-                  S&apos;inscrire
-                </button>
-              </form>
-            )}
-          </div>
-        </section>
+  <div className="container newsletter-inner">
+    <div className="newsletter-text">
+      <h2>Recevez les meilleures offres</h2>
+      <p>
+        Soyez informé des nouveaux produits, des promotions des boutiques,
+        des ventes flash et des meilleures opportunités du marché.
+      </p>
+    </div>
+
+    {newsletterSent ? (
+      <p className="newsletter-success">
+        <Icon name="icon-check" />
+        Merci ! Votre inscription a bien été prise en compte.
+      </p>
+    ) : (
+      <form className="newsletter-form" onSubmit={handleNewsletterSubmit}>
+        <label className="visually-hidden" htmlFor="newsletter-email">
+          Adresse e-mail
+        </label>
+
+        <div className="input-group">
+          <Icon name="icon-mail" />
+          <input
+            id="newsletter-email"
+            type="email"
+            placeholder="Entrez votre adresse e-mail"
+            value={newsletterEmail}
+            onChange={(event) => setNewsletterEmail(event.target.value)}
+            required
+          />
+        </div>
+
+        <button className="btn btn-primary" type="submit">
+          S'abonner
+        </button>
+      </form>
+    )}
+  </div>
+</section>
+
         </>
         )}
       </main>
@@ -756,11 +780,12 @@ function App() {
               <span className="brand-mark">
                 <Icon name="icon-gamepad" />
               </span>
-              <span className="brand-name">Assigame</span>
+              <span className="brand-name">AssiNet</span>
             </a>
             <p>
-              La boutique en ligne dédiée au gaming et à la tech : matériel sélectionné,
-              prix justes et service après-vente réactif.
+              AssiNet est une marketplace moderne qui met en relation acheteurs et vendeurs.
+  Découvrez des milliers de produits proposés par des boutiques vérifiées
+  dans un environnement simple, rapide et sécurisé.
             </p>
             <div className="social-links">
               <a className="icon-btn" href="#top" aria-label="Discord">
@@ -779,42 +804,48 @@ function App() {
           </div>
 
           <div className="footer-links">
-            <h3>Boutique</h3>
-            <ul>
-              <li><a href="#categories">Catalogue</a></li>
-              <li><a href="#produits">Nouveautés</a></li>
-              <li><a href="#promotions">Promotions</a></li>
-              <li><a href="#top">Cartes cadeaux</a></li>
-            </ul>
+           <h3>Marché</h3>
+<ul>
+  <li><a href="#categories">Catégories</a></li>
+  <li><a href="#produits">Produits</a></li>
+  <li><a href="#promotions">Offres spéciales</a></li>
+  <li><a href="#top">Nouveautés</a></li>
+</ul>
+
+
           </div>
 
           <div className="footer-links">
-            <h3>Entreprise</h3>
-            <ul>
-              <li><a href="#top">À propos</a></li>
-              <li><a href="#top">Carrières</a></li>
-              <li><a href="#top">Presse</a></li>
-              <li><a href="#top">Partenaires</a></li>
-            </ul>
+            <h3>Boutiques</h3>
+<ul>
+  <li><a href="#top">Nos boutiques</a></li>
+  <li><a href="#top">Devenir vendeur</a></li>
+  <li><a href="#top">Partenaires</a></li>
+  <li><a href="#top">Créer une boutique</a></li>
+</ul>
+
           </div>
 
           <div className="footer-links">
-            <h3>Aide</h3>
-            <ul>
-              <li><a href="#top">Suivi de commande</a></li>
-              <li><a href="#avantages">Livraison &amp; retours</a></li>
-              <li><a href="#top">Garantie</a></li>
-              <li><a href="#top">Contact</a></li>
-            </ul>
+            <h3>Assistance</h3>
+<ul>
+  <li><a href="#top">Suivi des commandes</a></li>
+  <li><a href="#top">Livraison & retours</a></li>
+  <li><a href="#top">Centre d'aide</a></li>
+  <li><a href="#top">Contact</a></li>
+</ul>
+
+
           </div>
         </div>
 
         <div className="container footer-bottom">
-          <p>© 2026 Assigame. Tous droits réservés.</p>
+          <p>© 2026 AssiNet. Tous droits réservés.</p>
           <div className="footer-legal">
-            <a href="#top">Mentions légales</a>
-            <a href="#top">Confidentialité</a>
-            <a href="#top">CGV</a>
+           <a href="#top">Mentions légales</a>
+           <a href="#top">Politique de confidentialité</a> 
+           <a href="#top">Conditions d'utilisation</a>
+
           </div>
         </div>
       </footer>

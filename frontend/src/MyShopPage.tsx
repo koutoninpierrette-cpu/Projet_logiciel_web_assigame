@@ -260,7 +260,7 @@ function MyShopPage({
           </div>
           <div className="input-row">
             <div className="input-group">
-              <label htmlFor="product-price">Prix (€)</label>
+              <label htmlFor="product-price">Prix (FCFA)</label>
               <input
                 id="product-price"
                 type="number"
@@ -268,7 +268,7 @@ function MyShopPage({
                 step="0.01"
                 value={productPrice}
                 onChange={(event) => setProductPrice(event.target.value)}
-                placeholder="49.99"
+                placeholder="10.000"
                 required
               />
             </div>

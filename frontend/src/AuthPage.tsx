@@ -77,17 +77,16 @@ function AuthPage({ onClose, onAuthenticated }: { onClose: () => void; onAuthent
             <span className="brand-mark">
               <Icon name="icon-gamepad" />
             </span>
-            <span className="brand-name">Assigame</span>
+            <span className="brand-name">AssiNet</span>
           </a>
-          <h2>Rejoignez la communauté Assigame</h2>
+          <h2>Rejoignez la communauté AssiNet</h2>
           <p>
-            Suivez vos commandes, sauvegardez vos favoris et profitez d&apos;offres
-            réservées aux membres sur tout le catalogue gaming &amp; tech.
+           Suivez vos commandes, sauvegardez vos favoris et profitez d'offres réservées aux membres sur l'ensemble de notre catalogue.
           </p>
           <ul className="auth-perks">
             <li>
               <Icon name="icon-check" />
-              Livraison suivie en temps réel
+             Sachez où est votre commande, à tout moment
             </li>
             <li>
               <Icon name="icon-check" />
