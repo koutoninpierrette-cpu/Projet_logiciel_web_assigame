@@ -62,7 +62,7 @@ function CartDrawer({ open, items, total, ordered, onClose, onIncrement, onDecre
                   </div>
                   <div className="cart-item-info">
                     <span className="cart-item-name">{product.name}</span>
-                    <span className="cart-item-price">{product.price.toFixed(2)} €</span>
+                    <span className="cart-item-price">{product.price.toFixed(2)} FCFA</span>
                     {product.shopName && (
                       <span className="cart-item-shop">
                         <Icon name="icon-store" />
@@ -90,7 +90,7 @@ function CartDrawer({ open, items, total, ordered, onClose, onIncrement, onDecre
             <div className="cart-footer">
               <div className="cart-total">
                 <span>Total</span>
-                <span>{total.toFixed(2)} €</span>
+                <span>{total.toFixed(2)} FCFA</span>
               </div>
               <button className="btn btn-primary cart-checkout" type="button" onClick={onCheckout}>
                 Valider la commande

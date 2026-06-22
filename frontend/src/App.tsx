@@ -89,99 +89,14 @@ const fallbackCategories: Category[] = [
   { id: 'wearables', name: 'Montres connectées', description: 'Suivi sport et santé', icon: 'icon-watch', count: '70 produits' },
 ]
 
-const fallbackProducts: Product[] = [
-  {
-    id: 'p1',
-    name: 'Casque Gaming Pro X7',
-    category: 'Audio',
-    price: 89.99,
-    oldPrice: 119.99,
-    rating: 4.5,
-    reviews: 312,
-    badge: 'Promo',
-    accent: 'cyan',
-    icon: 'icon-headphones',
-  },
-  {
-    id: 'p2',
-    name: 'Souris sans fil UltraLight',
-    category: 'Gaming',
-    price: 49.99,
-    rating: 4.8,
-    reviews: 540,
-    badge: 'Nouveau',
-    accent: 'blue',
-    icon: 'icon-gamepad',
-  },
-  {
-    id: 'p3',
-    name: 'Écran 27" QHD 165Hz',
-    category: 'Écrans',
-    price: 299,
-    rating: 4.6,
-    reviews: 187,
-    accent: 'green',
-    icon: 'icon-monitor',
-  },
-  {
-    id: 'p4',
-    name: 'Clavier mécanique 75%',
-    category: 'Informatique',
-    price: 109,
-    rating: 4.7,
-    reviews: 421,
-    badge: 'Best-seller',
-    accent: 'amber',
-    icon: 'icon-laptop',
-  },
-  {
-    id: 'p5',
-    name: 'Carte graphique RTX Performance',
-    category: 'Composants',
-    price: 649,
-    oldPrice: 729,
-    rating: 4.9,
-    reviews: 96,
-    badge: 'Promo',
-    accent: 'cyan',
-    icon: 'icon-chip',
-  },
-  {
-    id: 'p6',
-    name: 'Montre connectée Sport',
-    category: 'Montres',
-    price: 159,
-    rating: 4.3,
-    reviews: 208,
-    badge: 'Nouveau',
-    accent: 'blue',
-    icon: 'icon-watch',
-  },
-]
- 
-const trustPoints = [
-  {
-    icon: 'icon-store',
-    title: 'Boutiques vérifiées',
-    text: 'Achetez auprès de vendeurs vérifiés.'
-  },
-  {
-    icon: 'icon-monitor',
-    title: 'Large choix de produits',
-    text: 'Des centaines de produits proposés par différentes boutiques.'
-  },
-  {
-    icon: 'icon-star',
-    title: 'Avis et évaluations',
-    text: 'Consultez les notes et commentaires des acheteurs.'
-  },
-  {
-    icon: 'icon-shield',
-    title: 'Transactions sécurisées',
-    text: 'Protection des données et des échanges.'
-  },
-]
+const fallbackProducts: Product[] = []
 
+const trustPoints = [
+  { icon: 'icon-store', title: 'Boutiques vérifiées', text: 'Achetez auprès de vendeurs vérifiés.' },
+  { icon: 'icon-monitor', title: 'Large choix de produits', text: 'Des centaines de produits proposés par différentes boutiques.' },
+  { icon: 'icon-star', title: 'Avis et évaluations', text: 'Consultez les notes et commentaires des acheteurs.' },
+  { icon: 'icon-shield', title: 'Transactions sécurisées', text: 'Protection des données et des échanges.' },
+]
 
 const fallbackShops: Shop[] = [
   {
@@ -205,6 +120,14 @@ const fallbackShops: Shop[] = [
     createdAt: new Date().toISOString(),
   },
 ]
+
+// ✅ Fonction toggle propre, hors du JSX
+function toggleTheme() {
+  const root = document.documentElement
+  const isDark = root.dataset.theme === 'dark'
+  root.dataset.theme = isDark ? 'light' : 'dark'
+  localStorage.setItem('theme', root.dataset.theme)
+}
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -233,6 +156,20 @@ function App() {
   const [myShop, setMyShop] = useState<Shop | null>(null)
   const [view, setView] = useState<'home' | 'shops' | 'shop' | 'my-shop' | 'admin'>('home')
   const [selectedShopId, setSelectedShopId] = useState<string | null>(null)
+
+  // État pour le thème (pour mettre à jour l'icône du bouton)
+  const [isDark, setIsDark] = useState(
+    () => (localStorage.getItem('theme') || 'dark') === 'dark'
+  )
+
+  //  Toggle thème avec mise à jour de l'état React
+  function handleToggleTheme() {
+    const root = document.documentElement
+    const currentlyDark = root.dataset.theme === 'dark'
+    root.dataset.theme = currentlyDark ? 'light' : 'dark'
+    localStorage.setItem('theme', root.dataset.theme)
+    setIsDark(!currentlyDark)
+  }
 
   useEffect(() => {
     let cancelled = false
@@ -274,15 +211,11 @@ function App() {
     }
 
     load()
-    return () => {
-      cancelled = true
-    }
+    return () => { cancelled = true }
   }, [])
 
   useEffect(() => {
-    if (!currentUser) {
-      return
-    }
+    if (!currentUser) return
 
     let cancelled = false
     fetchBoutiqueByUser(currentUser.id_utilisateur)
@@ -290,13 +223,9 @@ function App() {
         if (cancelled) return
         setMyShop(boutique ? mapApiBoutique(boutique, 0) : null)
       })
-      .catch(() => {
-        // Le backend n'est pas joignable : pas de boutique connue pour cet utilisateur.
-      })
+      .catch(() => {})
 
-    return () => {
-      cancelled = true
-    }
+    return () => { cancelled = true }
   }, [currentUser])
 
   useEffect(() => {
@@ -310,9 +239,7 @@ function App() {
       }
     })
 
-    return () => {
-      cancelled = true
-    }
+    return () => { cancelled = true }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser?.id_utilisateur])
 
@@ -331,11 +258,10 @@ function App() {
   }
 
   const shopsWithCounts = useMemo(
-    () =>
-      shops.map((shop) => ({
-        ...shop,
-        productCount: products.filter((product) => product.shopId === shop.id).length,
-      })),
+    () => shops.map((shop) => ({
+      ...shop,
+      productCount: products.filter((product) => product.shopId === shop.id).length,
+    })),
     [shops, products],
   )
 
@@ -366,9 +292,7 @@ function App() {
     )
   }, [searchQuery, products])
 
-  function closeMenu() {
-    setMenuOpen(false)
-  }
+  function closeMenu() { setMenuOpen(false) }
 
   function addToCart(id: string) {
     setOrdered(false)
@@ -384,11 +308,7 @@ function App() {
     setCart((current) => {
       const next = (current[id] ?? 0) - 1
       const updated = { ...current }
-      if (next <= 0) {
-        delete updated[id]
-      } else {
-        updated[id] = next
-      }
+      if (next <= 0) { delete updated[id] } else { updated[id] = next }
       return updated
     })
   }
@@ -428,36 +348,11 @@ function App() {
     setNewsletterSent(true)
   }
 
-  function goHome() {
-    setView('home')
-    setSelectedShopId(null)
-    closeMenu()
-  }
-
-  function goToShops() {
-    setView('shops')
-    setSelectedShopId(null)
-    closeMenu()
-  }
-
-  function selectShop(id: string) {
-    setSelectedShopId(id)
-    setView('shop')
-  }
-
-  function goToMyShop() {
-    setView('my-shop')
-    setSelectedShopId(null)
-    setAccountMenuOpen(false)
-    closeMenu()
-  }
-
-  function goToAdmin() {
-    setView('admin')
-    setSelectedShopId(null)
-    setAccountMenuOpen(false)
-    closeMenu()
-  }
+  function goHome() { setView('home'); setSelectedShopId(null); closeMenu() }
+  function goToShops() { setView('shops'); setSelectedShopId(null); closeMenu() }
+  function selectShop(id: string) { setSelectedShopId(id); setView('shop') }
+  function goToMyShop() { setView('my-shop'); setSelectedShopId(null); setAccountMenuOpen(false); closeMenu() }
+  function goToAdmin() { setView('admin'); setSelectedShopId(null); setAccountMenuOpen(false); closeMenu() }
 
   function handleShopCreated(boutique: ApiBoutique) {
     const shop = mapApiBoutique(boutique, 0)
@@ -487,10 +382,9 @@ function App() {
       <header className="site-header">
         <div className="container header-inner">
           <a href="#top" className="brand" onClick={goHome}>
-            <span className="brand-mark">
-              <Icon name="icon-gamepad" />
-            </span>
-            <span className="brand-name">AssiNet</span>
+            <img
+           src="../img.jpg" alt="AssiNet" className="brand-logo"/>
+         <span className="brand-name">AssiNet</span>
           </a>
 
           <nav className={`main-nav${menuOpen ? ' open' : ''}`} aria-label="Navigation principale">
@@ -504,6 +398,23 @@ function App() {
             <button className="icon-btn search-btn" aria-label="Rechercher" type="button" onClick={() => setSearchOpen(true)}>
               <Icon name="icon-search" />
             </button>
+
+            {/*  Bouton toggle dark/light mode */}
+            <button
+              className="toggle-btn"
+              onClick={handleToggleTheme}
+              aria-label={isDark ? 'Passer en mode clair' : 'Passer en mode sombre'}
+              title={isDark ? 'Mode clair' : 'Mode sombre'}
+              type="button"
+            >
+              <div className="toggle-track">
+                <div className="toggle-thumb" />
+              </div>
+              <span className="toggle-label">
+                {isDark ? '☀️' : '🌙'}
+              </span>
+            </button>
+
             {currentUser && (
               <button className="btn btn-ghost btn-sm my-shop-btn" type="button" onClick={goToMyShop}>
                 <Icon name="icon-store" />
@@ -524,20 +435,12 @@ function App() {
                   </button>
                   {accountMenuOpen && (
                     <div className="account-menu">
-                      <p className="account-greeting">
-                        Bonjour {currentUser.Prenom}
-                      </p>
-                      <button type="button" className="account-link" onClick={goToMyShop}>
-                        Ma boutique
-                      </button>
+                      <p className="account-greeting">Bonjour {currentUser.Prenom}</p>
+                      <button type="button" className="account-link" onClick={goToMyShop}>Ma boutique</button>
                       {isAdmin && (
-                        <button type="button" className="account-link" onClick={goToAdmin}>
-                          Administration
-                        </button>
+                        <button type="button" className="account-link" onClick={goToAdmin}>Administration</button>
                       )}
-                      <button type="button" className="account-logout" onClick={handleLogout}>
-                        Se déconnecter
-                      </button>
+                      <button type="button" className="account-logout" onClick={handleLogout}>Se déconnecter</button>
                     </div>
                   )}
                 </>
@@ -598,178 +501,147 @@ function App() {
         )}
 
         {view === 'home' && (
-        <>
-        <section className="hero">
-          <div className="container hero-inner">
-            <div className="hero-content">
-              <span className="eyebrow">Nouvelle collection 2026</span>
-              <h1>
-                Achetez et vendez vos produits en toute simplicité
-              </h1>
-              <p className="hero-text">
-                Une plateforme qui permet aux vendeurs de créer leur boutique et aux acheteurs de trouver les meilleurs produits.
-              </p>
-              <div className="hero-actions">
-  <a className="btn btn-primary" href="#produits">
-    Découvrir les produits
-    <Icon name="icon-arrow-right" />
-  </a>
-
-  <a className="btn btn-ghost" href="#categories">
-    Parcourir les catégories
-  </a>
-</div>
-
-<dl className="hero-stats">
-  <div>
-    <dt>Multi-catégories</dt>
-    <dd>des produits variés</dd>
-  </div>
-
-  <div>
-    <dt>Boutiques</dt>
-    <dd>vendeurs vérifiés</dd>
-  </div>
-
-  <div>
-    <dt>Sécurisé</dt>
-    <dd>achats en confiance</dd>
-  </div>
-</dl>
-
-            </div>
-
-            <div className="hero-visual" aria-hidden="true">
-              <div className="hero-panel">
-                <div className="hero-panel-glow" />
-                <Icon name="icon-gamepad" className="hero-panel-icon" />
-                <div className="hero-card hero-card-price">
-                  <span className="hero-card-label">Carte graphique RTX</span>
-                  <span className="hero-card-value">500.000 FCFA</span>
+          <>
+            <section className="hero">
+              <div className="container hero-inner">
+                <div className="hero-content">
+                  <span className="eyebrow">Nouvelle collection 2026</span>
+                  <h1>Achetez et vendez vos produits en toute simplicité</h1>
+                  <p className="hero-text">
+                    Une plateforme qui permet aux vendeurs de créer leur boutique et aux acheteurs de trouver les meilleurs produits.
+                  </p>
+                  <div className="hero-actions">
+                    <a className="btn btn-primary" href="#produits">
+                      Découvrir les produits
+                      <Icon name="icon-arrow-right" />
+                    </a>
+                    <a className="btn btn-ghost" href="#categories">
+                      Parcourir les catégories
+                    </a>
+                  </div>
+                  <dl className="hero-stats">
+                    <div><dt>Multi-catégories</dt><dd>des produits variés</dd></div>
+                    <div><dt>Boutiques</dt><dd>vendeurs vérifiés</dd></div>
+                    <div><dt>Sécurisé</dt><dd>achats en confiance</dd></div>
+                  </dl>
                 </div>
-                <div className="hero-card hero-card-rating">
-                  <Icon name="icon-star" className="star filled" />
-                  <span>4.9 / 5</span>
-                </div>
-                <div className="hero-card hero-card-stock">
-                  <Icon name="icon-shield" />
-                  <span>Garantie 2 ans</span>
+
+                <div className="hero-visual" aria-hidden="true">
+                  <div className="hero-panel">
+                    <div className="hero-panel-glow" />
+                   <img src="../images.jpg" alt="Outils vidéos de surveillances" className="hero-panel-icon"/>
+                    <div className="hero-card hero-card-price">
+                      <span className="hero-card-label">Outils vidéos de surveillances</span>
+                      <span className="hero-card-value">500.000 FCFA</span>
+                    </div>
+                    <div className="hero-card hero-card-rating">
+                      <Icon name="icon-star" className="star filled" />
+                      <span>4.9 / 5</span>
+                    </div>
+                    <div className="hero-card hero-card-stock">
+                      <Icon name="icon-shield" />
+                      <span>Garantie 2 ans</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
+            </section>
 
-        <section className="categories" id="categories">
-          <div className="container">
-            <div className="section-head">
-              <div>
-                <span className="section-tag">Catalogue</span>
-                <h2>Parcourir par catégorie</h2>
+            <section className="categories" id="categories">
+              <div className="container">
+                <div className="section-head">
+                  <div>
+                    <span className="section-tag">Catalogue</span>
+                    <h2>Parcourir par catégorie</h2>
+                  </div>
+                  <p className="section-text"></p>
+                </div>
+                <div className="category-grid">
+                  {categories.map((category) => (
+                    <a className="category-card" href="#produits" key={category.id}>
+                      <span className="category-icon"><Icon name={category.icon} /></span>
+                      <span className="category-name">{category.name}</span>
+                      <span className="category-desc">{category.description}</span>
+                      <span className="category-count">{category.count}</span>
+                    </a>
+                  ))}
+                </div>
               </div>
-              <p className="section-text">
-               
-              </p>
-            </div>
+            </section>
 
-            <div className="category-grid">
-              {categories.map((category) => (
-                <a className="category-card" href="#produits" key={category.id}>
-                  <span className="category-icon">
-                    <Icon name={category.icon} />
-                  </span>
-                  <span className="category-name">{category.name}</span>
-                  <span className="category-desc">{category.description}</span>
-                  <span className="category-count">{category.count}</span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="products" id="produits">
-          <div className="container">
-            <div className="section-head">
-              <div>
-                <span className="section-tag">Sélection</span>
-                <h2>Produits phares de la semaine</h2>
+            <section className="products" id="produits">
+              <div className="container">
+                <div className="section-head">
+                  <div>
+                    <span className="section-tag">Sélection</span>
+                    <h2>Produits phares de la semaine</h2>
+                  </div>
+                  <a className="link-more" href="#categories">
+                    Voir tout le catalogue
+                    <Icon name="icon-arrow-right" />
+                  </a>
+                </div>
+                <div className="product-grid">
+                  {products.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      inCart={cart[product.id] ?? 0}
+                      isFavorite={Boolean(wishlist[product.id])}
+                      onAddToCart={addToCart}
+                      onToggleWishlist={toggleWishlist}
+                    />
+                  ))}
+                </div>
               </div>
-              <a className="link-more" href="#categories">
-                Voir tout le catalogue
-                <Icon name="icon-arrow-right" />
-              </a>
-            </div>
+            </section>
 
-            <div className="product-grid">
-              {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  inCart={cart[product.id] ?? 0}
-                  isFavorite={Boolean(wishlist[product.id])}
-                  onAddToCart={addToCart}
-                  onToggleWishlist={toggleWishlist}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="trust" id="avantages">
-          <div className="container trust-grid">
-            {trustPoints.map((point) => (
-              <div className="trust-card" key={point.title}>
-                <span className="trust-icon">
-                  <Icon name={point.icon} />
-                </span>
-                <h3>{point.title}</h3>
-                <p>{point.text}</p>
+            <section className="trust" id="avantages">
+              <div className="container trust-grid">
+                {trustPoints.map((point) => (
+                  <div className="trust-card" key={point.title}>
+                    <span className="trust-icon"><Icon name={point.icon} /></span>
+                    <h3>{point.title}</h3>
+                    <p>{point.text}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </section>
-        <section className="newsletter" id="promotions">
-  <div className="container newsletter-inner">
-    <div className="newsletter-text">
-      <h2>Recevez les meilleures offres</h2>
-      <p>
-        Soyez informé des nouveaux produits, des promotions des boutiques,
-        des ventes flash et des meilleures opportunités du marché.
-      </p>
-    </div>
+            </section>
 
-    {newsletterSent ? (
-      <p className="newsletter-success">
-        <Icon name="icon-check" />
-        Merci ! Votre inscription a bien été prise en compte.
-      </p>
-    ) : (
-      <form className="newsletter-form" onSubmit={handleNewsletterSubmit}>
-        <label className="visually-hidden" htmlFor="newsletter-email">
-          Adresse e-mail
-        </label>
-
-        <div className="input-group">
-          <Icon name="icon-mail" />
-          <input
-            id="newsletter-email"
-            type="email"
-            placeholder="Entrez votre adresse e-mail"
-            value={newsletterEmail}
-            onChange={(event) => setNewsletterEmail(event.target.value)}
-            required
-          />
-        </div>
-
-        <button className="btn btn-primary" type="submit">
-          S'abonner
-        </button>
-      </form>
-    )}
-  </div>
-</section>
-
-        </>
+            <section className="newsletter" id="promotions">
+              <div className="container newsletter-inner">
+                <div className="newsletter-text">
+                  <h2>Recevez les meilleures offres</h2>
+                  <p>
+                    Soyez informé des nouveaux produits, des promotions des boutiques,
+                    des ventes flash et des meilleures opportunités du marché.
+                  </p>
+                </div>
+                {newsletterSent ? (
+                  <p className="newsletter-success">
+                    <Icon name="icon-check" />
+                    Merci ! Votre inscription a bien été prise en compte.
+                  </p>
+                ) : (
+                  <form className="newsletter-form" onSubmit={handleNewsletterSubmit}>
+                    <label className="visually-hidden" htmlFor="newsletter-email">Adresse e-mail</label>
+                    <div className="input-group">
+                      <Icon name="icon-mail" />
+                      <input
+                        id="newsletter-email"
+                        type="email"
+                        placeholder="Entrez votre adresse e-mail"
+                        value={newsletterEmail}
+                        onChange={(event) => setNewsletterEmail(event.target.value)}
+                        required
+                      />
+                    </div>
+                    <button className="btn btn-primary" type="submit">S'abonner</button>
+                  </form>
+                )}
+              </div>
+            </section>
+          </>
         )}
       </main>
 
@@ -777,75 +649,62 @@ function App() {
         <div className="container footer-top">
           <div className="footer-brand">
             <a href="#top" className="brand">
-              <span className="brand-mark">
-                <Icon name="icon-gamepad" />
-              </span>
-              <span className="brand-name">AssiNet</span>
+              <a href="#top" className="brand" onClick={goHome}>
+  <img
+    src="../img.jpg" alt="AssiNet" className="brand-logo"/>
+    <span className="brand-name">AssiNet</span>
+</a>
             </a>
             <p>
               AssiNet est une marketplace moderne qui met en relation acheteurs et vendeurs.
-  Découvrez des milliers de produits proposés par des boutiques vérifiées
-  dans un environnement simple, rapide et sécurisé.
+              Découvrez des milliers de produits proposés par des boutiques vérifiées
+              dans un environnement simple, rapide et sécurisé.
             </p>
             <div className="social-links">
-              <a className="icon-btn" href="#top" aria-label="Discord">
-                <Icon name="icon-discord" />
-              </a>
-              <a className="icon-btn" href="#top" aria-label="Twitch">
-                <Icon name="icon-twitch" />
-              </a>
-              <a className="icon-btn" href="#top" aria-label="Instagram">
-                <Icon name="icon-instagram" />
-              </a>
-              <a className="icon-btn" href="#top" aria-label="X">
-                <Icon name="icon-x" />
-              </a>
+              <a className="icon-btn" href="#top" aria-label="Discord"><Icon name="icon-discord" /></a>
+              <a className="icon-btn" href="#top" aria-label="Twitch"><Icon name="icon-twitch" /></a>
+              <a className="icon-btn" href="#top" aria-label="Instagram"><Icon name="icon-instagram" /></a>
+              <a className="icon-btn" href="#top" aria-label="X"><Icon name="icon-x" /></a>
             </div>
           </div>
 
           <div className="footer-links">
-           <h3>Marché</h3>
-<ul>
-  <li><a href="#categories">Catégories</a></li>
-  <li><a href="#produits">Produits</a></li>
-  <li><a href="#promotions">Offres spéciales</a></li>
-  <li><a href="#top">Nouveautés</a></li>
-</ul>
-
-
+            <h3>Marché</h3>
+            <ul>
+              <li><a href="#categories">Catégories</a></li>
+              <li><a href="#produits">Produits</a></li>
+              <li><a href="#promotions">Offres spéciales</a></li>
+              <li><a href="#top">Nouveautés</a></li>
+            </ul>
           </div>
 
           <div className="footer-links">
             <h3>Boutiques</h3>
-<ul>
-  <li><a href="#top">Nos boutiques</a></li>
-  <li><a href="#top">Devenir vendeur</a></li>
-  <li><a href="#top">Partenaires</a></li>
-  <li><a href="#top">Créer une boutique</a></li>
-</ul>
-
+            <ul>
+              <li><a href="#top">Nos boutiques</a></li>
+              <li><a href="#top">Devenir vendeur</a></li>
+              <li><a href="#top">Partenaires</a></li>
+              <li><a href="#top">Créer une boutique</a></li>
+            </ul>
           </div>
 
           <div className="footer-links">
             <h3>Assistance</h3>
-<ul>
-  <li><a href="#top">Suivi des commandes</a></li>
-  <li><a href="#top">Livraison & retours</a></li>
-  <li><a href="#top">Centre d'aide</a></li>
-  <li><a href="#top">Contact</a></li>
-</ul>
-
-
+            <ul>
+              <li><a href="#top">Suivi des commandes</a></li>
+              <li><a href="#top">Livraison & retours</a></li>
+              <li><a href="#top">Centre d'aide</a></li>
+              <li><a href="#top">Contact</a></li>
+            </ul>
           </div>
         </div>
 
         <div className="container footer-bottom">
           <p>© 2026 AssiNet. Tous droits réservés.</p>
           <div className="footer-legal">
-           <a href="#top">Mentions légales</a>
-           <a href="#top">Politique de confidentialité</a> 
-           <a href="#top">Conditions d'utilisation</a>
-
+            <a href="#top">Mentions légales</a>
+            <a href="#top">Politique de confidentialité</a>
+            <a href="#top">Conditions d'utilisation</a>
           </div>
         </div>
       </footer>
@@ -875,3 +734,4 @@ function App() {
 }
 
 export default App
+

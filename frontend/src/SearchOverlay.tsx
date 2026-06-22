@@ -54,7 +54,7 @@ function SearchOverlay({ open, query, results, onQueryChange, onClose, onSelect 
                         <span className="search-result-name">{product.name}</span>
                         <span className="search-result-category">{product.category}</span>
                       </span>
-                      <span className="search-result-price">{product.price.toFixed(2)} €</span>
+                      <span className="search-result-price">{product.price.toFixed(2)} FCFA</span>
                     </button>
                   </li>
                 ))}

@@ -60,8 +60,8 @@ export function ProductCard({
         </div>
         <div className="product-footer">
           <div className="price-group">
-            <span className="price">{product.price.toFixed(2)} FCFA</span>
-            {product.oldPrice && <span className="old-price">{product.oldPrice.toFixed(2)} €</span>}
+            <span className="price">{product.price.toFixed(3)} FCFA</span>
+            {product.oldPrice && <span className="old-price">{product.oldPrice.toFixed(3)} FCFA</span>}
           </div>
           <button className="btn btn-primary btn-sm" type="button" onClick={() => onAddToCart(product.id)}>
             <Icon name="icon-cart" />

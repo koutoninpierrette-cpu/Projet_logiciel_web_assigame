@@ -1,18 +1,41 @@
-:root {
+/* ============================================================
+   THÃˆMES â€” doivent Ãªtre AVANT :root pour ne pas Ãªtre Ã©crasÃ©s
+   ============================================================ */
+
+[data-theme="dark"] {
   --bg: #0a0e16;
   --bg-soft: #0d1320;
   --surface: #121927;
   --surface-2: #1a2333;
   --border: #232c40;
   --border-soft: #1c2536;
-
   --text: #aab3c5;
   --text-h: #f4f7fb;
   --text-dim: #6b7689;
-
   --accent: #22d3ee;
-  --accent-2: #2563eb;
   --accent-soft: rgba(34, 211, 238, 0.12);
+}
+
+[data-theme="light"] {
+  --bg: #f0f4fa;
+  --bg-soft: #e8edf5;
+  --surface: #ffffff;
+  --surface-2: #f5f7fc;
+  --border: #dde3ef;
+  --border-soft: #e8edf5;
+  --text: #4a5568;
+  --text-h: #0f1623;
+  --text-dim: #8492b0;
+  --accent: #0891b2;
+  --accent-soft: rgba(8, 145, 178, 0.10);
+}
+
+/* ============================================================
+   BASE â€” variables qui ne changent pas selon le thÃ¨me
+   ============================================================ */
+
+:root {
+  --accent-2: #2563eb;
   --accent-contrast: #04212a;
 
   --success: #34d399;
@@ -30,14 +53,16 @@
   --mono: ui-monospace, 'SF Mono', Consolas, monospace;
 
   font: 16px/1.6 var(--sans);
-  color-scheme: dark;
-  color: var(--text);
-  background: var(--bg);
+  color-scheme: dark light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
 
 * {
   box-sizing: border-box;
@@ -50,11 +75,10 @@ body {
 }
 
 body {
-  background:
-    radial-gradient(60rem 32rem at 85% -10%, rgba(34, 211, 238, 0.08), transparent 60%),
-    radial-gradient(50rem 30rem at 10% 0%, rgba(37, 99, 235, 0.10), transparent 55%),
-    var(--bg);
+  background: var(--bg);
+  color: var(--text);
   min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 #root {
@@ -100,3 +124,53 @@ ul {
   height: 20px;
   flex-shrink: 0;
 }
+
+/* ============================================================
+   TOGGLE DARK / LIGHT MODE
+   ============================================================ */
+
+.toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 10px 4px 5px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  color: var(--text-dim);
+}
+
+.toggle-btn:hover {
+  border-color: var(--accent);
+}
+
+.toggle-track {
+  width: 34px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--accent);
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.3s;
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"]  .toggle-thumb { left: 18px; }
+[data-theme="light"] .toggle-thumb { left: 2px; }
+
+.toggle-label {
+  font-size: .85rem;
+  user-select: none;
+}
+
