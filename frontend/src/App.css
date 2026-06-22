@@ -129,6 +129,12 @@
   border-bottom: 1px solid var(--border-soft);
 }
 
+/* Mode clair : header blanc */
+[data-theme="light"] .site-header {
+  background: rgba(255, 255, 255, 0.90);
+  border-bottom: 1px solid #c3e3ef;
+}
+
 .header-inner {
   display: flex;
   align-items: center;
@@ -182,6 +188,20 @@
   text-decoration: none;
   color: var(--text);
   transition: color 0.2s ease;
+}
+
+/* Mode clair : texte nav sombre */
+[data-theme="light"] .main-nav a {
+  color: #003152;
+}
+
+[data-theme="light"] .main-nav a:hover {
+  color: #0077a8;
+}
+
+/* Mode clair : nom de la marque visible */
+[data-theme="light"] .brand {
+  color: #003152;
 }
 
 .main-nav a:hover {
@@ -367,10 +387,6 @@
 }
 
 /* Hero visual */
-.hero-visual {
-  position: relative;
-}
-
 .hero-panel {
   position: relative;
   aspect-ratio: 1 / 1;
