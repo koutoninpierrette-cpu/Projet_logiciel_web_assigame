@@ -383,8 +383,8 @@ function App() {
         <div className="container header-inner">
           <a href="#top" className="brand" onClick={goHome}>
             <img
-           src="../img.jpg" alt="AssiNet" className="brand-logo"/>
-         <span className="brand-name">AssiNet</span>
+           src="../img.jpg" alt="ASSIGAME" className="brand-logo"/>
+         <span className="brand-name">ASSIGAME</span>
           </a>
 
           <nav className={`main-nav${menuOpen ? ' open' : ''}`} aria-label="Navigation principale">
@@ -651,12 +651,12 @@ function App() {
             <a href="#top" className="brand">
               <a href="#top" className="brand" onClick={goHome}>
   <img
-    src="../img.jpg" alt="AssiNet" className="brand-logo"/>
-    <span className="brand-name">AssiNet</span>
+    src="../img.jpg" alt="ASSIGAME" className="brand-logo"/>
+    <span className="brand-name">ASSIGAME</span>
 </a>
             </a>
             <p>
-              AssiNet est une marketplace moderne qui met en relation acheteurs et vendeurs.
+              ASSIGAME est une marketplace moderne qui met en relation acheteurs et vendeurs.
               Découvrez des milliers de produits proposés par des boutiques vérifiées
               dans un environnement simple, rapide et sécurisé.
             </p>
@@ -700,7 +700,7 @@ function App() {
         </div>
 
         <div className="container footer-bottom">
-          <p>© 2026 AssiNet. Tous droits réservés.</p>
+          <p>© 2026 ASSIGAME. Tous droits réservés.</p>
           <div className="footer-legal">
             <a href="#top">Mentions légales</a>
             <a href="#top">Politique de confidentialité</a>
