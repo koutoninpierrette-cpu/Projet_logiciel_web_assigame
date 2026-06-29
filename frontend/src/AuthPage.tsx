@@ -75,11 +75,12 @@ function AuthPage({ onClose, onAuthenticated }: { onClose: () => void; onAuthent
         <div className="auth-side">
           <a href="#top" className="brand" onClick={onClose}>
             <span className="brand-mark">
-              <Icon name="icon-gamepad" />
+              <img
+           src="../img.jpg" alt="ASSIGAME" className="brand-logo"/>
             </span>
-            <span className="brand-name">AssiNet</span>
+            <span className="brand-name">ASSIGAME</span>
           </a>
-          <h2>Rejoignez la communauté AssiNet</h2>
+          <h2>Rejoignez la communauté ASSIGAME</h2>
           <p>
            Suivez vos commandes, sauvegardez vos favoris et profitez d'offres réservées aux membres sur l'ensemble de notre catalogue.
           </p>

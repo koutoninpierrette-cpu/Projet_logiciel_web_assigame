@@ -53,7 +53,7 @@ public class UtilisateurController {
 
     @PostMapping("/login")
     public Utilisateur login(@RequestBody LoginRequest request) {
-        Utilisateur utilisateur = utilisateurService.authenticate(request.email(), request.motdepasse());
+        Utilisateur utilisateur = utilisateurService.authenticate(request.getEmail(), request.getMotDePasse());
         utilisateur.setMotdepasse(null);
         return utilisateur;
     }

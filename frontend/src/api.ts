@@ -28,6 +28,13 @@ export type ApiUtilisateur = {
   statut: string
 }
 
+export type ApiAuthResponse = {
+  token: string
+  type: string
+  email: string
+  role: string
+}
+
 export type ApiBoutique = {
   id_boutique: number
   nom_boutique: string
@@ -72,9 +79,33 @@ export type CreateProduitPayload = {
 
 export class ApiError extends Error {}
 
+// ✅ Token persisté dans localStorage
+let authToken: string | null = localStorage.getItem('authToken')
+
+export function setAuthToken(token: string | null) {
+  authToken = token
+  if (token) {
+    localStorage.setItem('authToken', token)
+  } else {
+    localStorage.removeItem('authToken')
+  }
+}
+
+export function getAuthToken(): string | null {
+  return authToken
+}
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  }
+
+  if (authToken) {
+    headers['Authorization'] = `Bearer ${authToken}`
+  }
+
   const response = await fetch(`${API_BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     ...options,
   })
 
@@ -117,12 +148,19 @@ export function createProduit(payload: CreateProduitPayload): Promise<ApiProduit
   })
 }
 
+// ✅ uploadFile avec token JWT
 export async function uploadFile(file: File): Promise<string> {
   const formData = new FormData()
   formData.append('file', file)
 
+  const headers: Record<string, string> = {}
+  if (authToken) {
+    headers['Authorization'] = `Bearer ${authToken}`
+  }
+
   const response = await fetch(`${API_BASE}/api/upload`, {
     method: 'POST',
+    headers,
     body: formData,
   })
 
@@ -150,18 +188,44 @@ export function updateUtilisateur(id: number, payload: Partial<ApiUtilisateur>):
   })
 }
 
-export function signup(payload: SignupPayload): Promise<ApiUtilisateur> {
-  return request('/api/utilisateur/add', {
+// ✅ Signup — register puis login automatique
+export async function signup(payload: SignupPayload): Promise<ApiUtilisateur> {
+  const response = await fetch(`${API_BASE}/api/auth/register`, {
     method: 'POST',
-    body: JSON.stringify(payload),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      nom: payload.Nom,
+      prenom: payload.Prenom,
+      email: payload.Email,
+      motDePasse: payload.Motdepasse,
+    }),
   })
+
+  if (!response.ok) {
+    const text = await response.text()
+    throw new ApiError(text || `Erreur ${response.status}`)
+  }
+
+  return login({ email: payload.Email, motdepasse: payload.Motdepasse })
 }
 
-export function login(payload: LoginPayload): Promise<ApiUtilisateur> {
-  return request('/api/utilisateur/login', {
+// ✅ Login via nouvelle route JWT
+export async function login(payload: LoginPayload): Promise<ApiUtilisateur> {
+  const auth = await request<ApiAuthResponse>('/api/auth/login', {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      email: payload.email,
+      motDePasse: payload.motdepasse,
+    }),
   })
+
+  setAuthToken(auth.token)
+
+  const utilisateurs = await request<ApiUtilisateur[]>('/api/utilisateur/list')
+  const user = utilisateurs.find(u => u.Email === auth.email)
+
+  if (!user) throw new ApiError('Utilisateur introuvable après connexion.')
+  return user
 }
 
 export function deleteUtilisateur(id: number): Promise<void> {

@@ -16,6 +16,7 @@ import {
   fetchCategories,
   fetchProduits,
   fetchUtilisateur,
+  setAuthToken,
   type ApiBoutique,
   type ApiCategorie,
   type ApiProduit,
@@ -250,12 +251,14 @@ function App() {
   }
 
   function handleLogout() {
-    setCurrentUser(null)
-    localStorage.removeItem('currentUser')
-    setAccountMenuOpen(false)
-    setMyShop(null)
-    setView('home')
-  }
+  setCurrentUser(null)
+  localStorage.removeItem('currentUser')
+  localStorage.removeItem('authToken')  // ✅ ajoute
+  setAuthToken(null)                     // ✅ ajoute
+  setAccountMenuOpen(false)
+  setMyShop(null)
+  setView('home')
+}
 
   const shopsWithCounts = useMemo(
     () => shops.map((shop) => ({
@@ -389,7 +392,7 @@ function App() {
 
           <nav className={`main-nav${menuOpen ? ' open' : ''}`} aria-label="Navigation principale">
             <a href="#categories" onClick={goHome}>Catalogue</a>
-            <a href="#produits" onClick={goHome}>Produits phares</a>
+            <a href="#produits" onClick={goHome}>Produits</a>
             <a href="#boutiques" onClick={(event) => { event.preventDefault(); goToShops() }}>Boutiques</a>
             <a href="#avantages" onClick={goHome}>Avantages</a>
           </nav>
@@ -574,7 +577,7 @@ function App() {
                 <div className="section-head">
                   <div>
                     <span className="section-tag">Sélection</span>
-                    <h2>Produits phares de la semaine</h2>
+                    <h2>Produits </h2>
                   </div>
                   <a className="link-more" href="#categories">
                     Voir tout le catalogue
@@ -648,13 +651,10 @@ function App() {
       <footer className="site-footer">
         <div className="container footer-top">
           <div className="footer-brand">
-            <a href="#top" className="brand">
-              <a href="#top" className="brand" onClick={goHome}>
-  <img
-    src="../img.jpg" alt="ASSIGAME" className="brand-logo"/>
-    <span className="brand-name">ASSIGAME</span>
+<a href="#top" className="brand" onClick={goHome}>
+  <img src="../img.jpg" alt="ASSIGAME" className="brand-logo"/>
+  <span className="brand-name">ASSIGAME</span>
 </a>
-            </a>
             <p>
               ASSIGAME est une marketplace moderne qui met en relation acheteurs et vendeurs.
               Découvrez des milliers de produits proposés par des boutiques vérifiées
@@ -673,7 +673,6 @@ function App() {
             <ul>
               <li><a href="#categories">Catégories</a></li>
               <li><a href="#produits">Produits</a></li>
-              <li><a href="#promotions">Offres spéciales</a></li>
               <li><a href="#top">Nouveautés</a></li>
             </ul>
           </div>
@@ -683,7 +682,6 @@ function App() {
             <ul>
               <li><a href="#top">Nos boutiques</a></li>
               <li><a href="#top">Devenir vendeur</a></li>
-              <li><a href="#top">Partenaires</a></li>
               <li><a href="#top">Créer une boutique</a></li>
             </ul>
           </div>
@@ -692,7 +690,6 @@ function App() {
             <h3>Assistance</h3>
             <ul>
               <li><a href="#top">Suivi des commandes</a></li>
-              <li><a href="#top">Livraison & retours</a></li>
               <li><a href="#top">Centre d'aide</a></li>
               <li><a href="#top">Contact</a></li>
             </ul>
